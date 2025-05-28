@@ -2,6 +2,139 @@ package main
 
 import "fmt"
 
+// Structure to represent a bank account
+type BankAccount struct {
+	AccountHolder    string
+	AccountNumber    int
+	Balance          int
+	Transactions     [5]int // Array to store the last 5 transactions
+	AllTransactions  []int  // Slice to store all transactions
+	TransactionIndex int    // Index for circular array
+}
+
+// Method to deposit money
+func (account *BankAccount) Deposit(amount int) {
+	if amount > 0 {
+		account.Balance += amount
+		account.recordTransaction(amount)
+		fmt.Println("Deposit successful! New balance:", account.Balance)
+	} else {
+		fmt.Println("Invalid deposit amount.")
+	}
+}
+
+// Method to withdraw money
+func (account *BankAccount) Withdraw(amount int) {
+	if amount > 0 && amount <= account.Balance {
+		account.Balance -= amount
+		account.recordTransaction(-amount)
+		fmt.Println("Withdrawal successful! New balance:", account.Balance)
+	} else if amount > account.Balance {
+		fmt.Println("Insufficient balance!")
+	} else {
+		fmt.Println("Invalid withdrawal amount.")
+	}
+}
+
+// Method to record a transaction
+func (account *BankAccount) recordTransaction(amount int) {
+	account.Transactions[account.TransactionIndex%5] = amount
+	account.TransactionIndex++
+	account.AllTransactions = append(account.AllTransactions, amount)
+}
+
+// Method to view transactions
+func (account *BankAccount) ViewTransactions() {
+	fmt.Println("Last 5 Transactions (Array):", account.Transactions)
+	fmt.Println("All Transactions (Slice):", account.AllTransactions)
+}
+
+func main() {
+	// Defer a goodbye message
+	defer fmt.Println("Thank you for using the banking system. Goodbye!")
+
+	// Map to store multiple accounts
+	accounts := make(map[int]*BankAccount)
+
+	// Create a sample account and add it to the map
+	accounts[123456789] = &BankAccount{
+		AccountHolder: "John Doe",
+		AccountNumber: 123456789,
+		Balance:       1000,
+	}
+
+	// Start a loop for multiple transactions
+	for {
+		// Display menu
+		fmt.Println("\nBanking System")
+		fmt.Println("1. Deposit")
+		fmt.Println("2. Withdraw")
+		fmt.Println("3. View Transactions")
+		fmt.Println("4. Exit")
+		fmt.Print("Enter your choice: ")
+
+		// Get user choice
+		var choice int
+		fmt.Scan(&choice)
+
+		// Handle user choice using a switch statement
+		switch choice {
+		case 1: // Deposit
+			fmt.Print("Enter account number: ")
+			var accountNumber int
+			fmt.Scan(&accountNumber)
+
+			account, exists := accounts[accountNumber]
+			if !exists {
+				fmt.Println("Account not found!")
+				continue
+			}
+
+			fmt.Print("Enter amount to deposit: ")
+			var deposit int
+			fmt.Scan(&deposit)
+			account.Deposit(deposit)
+
+		case 2: // Withdraw
+			fmt.Print("Enter account number: ")
+			var accountNumber int
+			fmt.Scan(&accountNumber)
+
+			account, exists := accounts[accountNumber]
+			if !exists {
+				fmt.Println("Account not found!")
+				continue
+			}
+
+			fmt.Print("Enter amount to withdraw: ")
+			var withdraw int
+			fmt.Scan(&withdraw)
+			account.Withdraw(withdraw)
+
+		case 3: // View Transactions
+			fmt.Print("Enter account number: ")
+			var accountNumber int
+			fmt.Scan(&accountNumber)
+
+			account, exists := accounts[accountNumber]
+			if !exists {
+				fmt.Println("Account not found!")
+				continue
+			}
+
+			account.ViewTransactions()
+
+		case 4: // Exit
+			fmt.Println("Exiting the system...")
+			return
+
+		default:
+			fmt.Println("Invalid choice. Please try again.")
+		}
+	}
+}
+
+/*
 type Person struct {
 	name string
 	age  int
