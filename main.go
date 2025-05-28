@@ -2,6 +2,44 @@ package main
 
 import "fmt"
 
+type Person struct {
+	name string
+	age  int
+}
+
+func main() {
+	p := Person{name: "John", age: 30}
+	p.greet()
+	p.inc()
+
+}
+
+func (p *Person) inc() {
+	p.age++
+	fmt.Println("Age after increment:", p.age)
+}
+func (p *Person) greet() {
+	fmt.Println("hello", p.name, p.age)
+
+}
+
+/*
+
+func main() {
+	value := 10
+
+	fmt.Println("Value before change:", value)
+
+	updatevalue(&value)
+	fmt.Println("Value after change:", value)
+
+}
+
+func updatevalue(val *int) {
+	*val = *val * 20
+}
+
+/*
 func main() {
 	salary := make(map[string]int)
 	salary["John"] = 50000
