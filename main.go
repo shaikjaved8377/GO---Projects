@@ -3,6 +3,33 @@ package main
 import "fmt"
 
 func main() {
+	salary := make(map[string]int)
+	salary["John"] = 50000
+	salary["Jane"] = 60000
+	salary["Doe"] = 55000
+	fmt.Println("Salary of :", salary["Jane"])
+
+	dsalary, exists := salary["javed"]
+	if exists {
+		fmt.Println("Salary of Doe:", dsalary)
+	} else {
+		fmt.Println("Doe's salary not found")
+	}
+	salary["John"] = 70000 // Update John's salary
+	fmt.Println("Updated salary of John:", salary["John"])
+
+	fmt.Println("All salaries:")
+	for name, dsalary := range salary {
+		fmt.Printf("%s: %d\n", name, dsalary)
+	}
+
+	delete(salary, "John") // Delete John's salary
+	delete(salary, "Jane") // Delete Jane's salary
+	fmt.Println("After deletion, salaries:", salary)
+
+}
+
+/*
 	// slices
 	s := make([]int, 5)
 	fmt.Println("Length of slice:", len(s), cap(s))
