@@ -1,6 +1,35 @@
 package main
 
-// channels
+import (
+	"database/sql"
+	"fmt"
+	"go-projetcs/api"
+	"log"
+	"net/http"
+)
+
+func main() {
+	dsn := "username: password@tcp(localhost:3306)/dbname?parseTime=true"
+
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	if err := db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Connected to the database successfully!")
+
+	api.RegisterRoutes(db)
+	fmt.Println("sent request to routes")
+
+	log.Println("Starting the server on port 8080...")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+/*// channels
 import (
 	"fmt"
 	"sync"
