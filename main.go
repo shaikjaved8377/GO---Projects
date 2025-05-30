@@ -1,7 +1,94 @@
 package main
 
-import "fmt"
+// channels
+import (
+	"fmt"
+	"sync"
+)
 
+func main() {
+	ch := make(chan int)
+
+	go worker(ch)
+	for num := range ch {
+		fmt.Println("received value:", num)
+	}
+	fmt.Println("Mian function completed")
+}
+
+func worker(ch chan int) {
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 5; i++ {
+			fmt.Println("sending value:", i)
+			ch <- i // Send double of i to the channel
+		}
+	}()
+	wg.Wait() // Wait for the goroutine to finish
+	close(ch) // Close the channel after sending all values
+}
+
+/* interface and goroutines example
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	fmt.Println("Hello")
+
+	mesg := "hello"
+
+	go func(m string) {
+		fmt.Println(m)
+
+	}(mesg)
+
+	mesg = "world"
+	fmt.Println("bye")
+	time.Sleep(100 * time.Millisecond)
+
+}
+
+func hello(grn int) {
+	for i := 0; i < 5; i++ {
+		fmt.Println(grn, "hello")
+	}
+}
+
+/* interface and struct example
+
+type shape interface {
+	area() float64
+}
+
+type circle struct {
+	radius float64
+}
+
+func (c circle) area() float64 {
+	return 3.14 * c.radius * c.radius
+}
+
+func Printarea(s shape) {
+	// Print the area of the shape
+	fmt.Println("Area:", s.area())
+}
+
+func main() {
+	// Create a circle instance
+	c := circle{radius: 5.0}
+
+	// Print the area of the circle
+	Printarea(c)
+
+	// Defer a goodbye message
+	defer fmt.Println("Thank you for using the shape area calculator. Goodbye!")
+}
+
+/*
 // Structure to represent a bank account
 type BankAccount struct {
 	AccountHolder    string
