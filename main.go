@@ -6,10 +6,12 @@ import (
 	"go-projetcs/api"
 	"log"
 	"net/http"
+
+	_ "github.com/go-sql-driver/mysql" // Import the MySQL driver
 )
 
 func main() {
-	dsn := "username: password@tcp(localhost:3306)/dbname?parseTime=true"
+	dsn := "root:Javed@786@tcp(localhost:3306)/sys?parseTime=true"
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
