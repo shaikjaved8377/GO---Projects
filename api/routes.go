@@ -9,4 +9,5 @@ func RegisterRoutes(db *sql.DB) {
 	// Register your routes here
 	// e.g., http.HandleFunc("/example", exampleHandler)
 	http.HandleFunc("/create", Createhandler(db))
+	http.HandleFunc("/books", GetBookhandler(db))
 }
