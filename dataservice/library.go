@@ -2,19 +2,12 @@ package dataservice
 
 import (
 	"database/sql"
-	"encoding/json"
 	"go-projetcs/model"
-	"net/http"
 
 	_ "github.com/go-sql-driver/mysql" // Import the MySQL driver
 )
 
-func CreateBook(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
-	var book model.Book
-	// Decode the JSON request body into the Book struct
-	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		return err
-	}
+func CreateBook(db *sql.DB, book model.Book) error {
 	//insert the book record into the "books" table
 	query := "INSERT INTO books (title, author, year) VALUES (?, ?, ?)"
 	_, err := db.Exec(query, book.Title, book.Author, book.Year)
@@ -22,8 +15,6 @@ func CreateBook(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 		return err
 
 	}
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(book)
 	return nil
 }
 
@@ -48,35 +39,24 @@ func GetBooks(db *sql.DB) ([]model.Book, error) {
 	return books, nil
 }
 
-func UpdateBook(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
-	var book model.Book
-	// Decode the JSON request body into the Book struct
-	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		return err
-	}
+func UpdateBook(db *sql.DB, book model.Book) error {
+
 	// Update the book record in the "books" table
 	query := "UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?"
 	_, err := db.Exec(query, book.Title, book.Author, book.Year, book.ID)
 	if err != nil {
 		return err
 	}
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(book)
 	return nil
 }
 
-func DeleteBook(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
-	var book model.Book
-	// Decode the JSON request body into the Book struct
-	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		return err
-	}
+func DeleteBook(db *sql.DB, book model.Book) error {
+
 	// Delete the book record from the "books" table
 	query := "DELETE FROM books WHERE id = ?"
 	_, err := db.Exec(query, book.ID)
 	if err != nil {
 		return err
 	}
-	w.WriteHeader(http.StatusNoContent) // No content for successful deletion
 	return nil
 }
