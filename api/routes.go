@@ -8,8 +8,9 @@ import (
 func RegisterRoutes(db *sql.DB) {
 	// Register your routes here
 	// e.g., http.HandleFunc("/example", exampleHandler)
-	http.HandleFunc("/create", Createhandler(db))
-	http.HandleFunc("/books", GetBookhandler(db))
-	http.HandleFunc("/update", UpdateBookHandler(db)) // <-- Add this line
-	http.HandleFunc("/delete", DeleteBookHandler(db)) // <-- Add this line
+	h := NewHandler(db)
+	http.HandleFunc("/create", h.Createhandler(db))
+	http.HandleFunc("/books", h.GetBookhandler(db))
+	http.HandleFunc("/update", h.UpdateBookHandler(db)) // <-- Add this line
+	http.HandleFunc("/delete", h.DeleteBookHandler(db)) // <-- Add this line
 }
